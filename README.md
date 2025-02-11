@@ -11,7 +11,7 @@ A command-line tool that plays a random track from a specified Spotify playlist 
 ## Prerequisites
 - Python 3.6+
 - A Spotify Developer account with a registered app.
-- Installed Python packages: `spotipy`, `python-dotenv`, `keyboard`
+- Installed Python packages from requirements.txt
 
 ## Installation
 1. Clone the repository to your local machine.
