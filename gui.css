@@ -1,0 +1,14 @@
+#title {
+    text-align: center;
+    margin: 1 0;
+}
+
+#main_menu {
+    display: block;
+    align: center middle;
+}
+
+#button {
+    width: 200vw;
+    padding: 1;
+}
