@@ -23,7 +23,8 @@ class MacroManager:
             print("1. Add new macro")
             print("2. Change existing macro")
             print("3. Remove macro")
-            print("4. Return to main menu")
+            print("4. List current macros")
+            print("5. Return to main menu")
             choice = input("Choose an option: ")
 
             if choice == '1':
@@ -33,10 +34,34 @@ class MacroManager:
             elif choice == '3':
                 self.remove_macro()
             elif choice == '4':
+                self.list_macros()
+            elif choice == '5':
                 self.save_macros()
                 break
             else:
                 print("Invalid choice. Please try again.")
+
+    def get_playlist_name(self, playlist_id):
+        playlists = self.spotify_client.get_playlists()
+        for playlist in playlists:
+            if playlist['id'] == playlist_id:
+                return playlist['name']
+        return "Unknown playlist"
+
+    def list_macros(self):
+        if not self.macros:
+            print("\nNo macros are currently set up.")
+            return
+
+        print("\nCurrent Macros:")
+        print("-" * 50)
+        print("Key\tPlaylist Name")
+        print("-" * 50)
+        for key, playlist_id in self.macros.items():
+            playlist_name = self.get_playlist_name(playlist_id)
+            print(f"{key}\t{playlist_name}")
+        print("-" * 50)
+        input("\nPress Enter to continue...")
 
     def add_macro(self):
         playlists = self.spotify_client.get_playlists()
