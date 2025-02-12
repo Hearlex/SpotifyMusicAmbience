@@ -70,6 +70,11 @@ class MacroManager:
         playlist_choice = int(input("Choose a playlist: ")) - 1
         playlist_id = playlists[playlist_choice]['id']
         key = input("Enter the key for the macro: ")
+        
+        if key in self.macros:
+            print(f"A macro for key '{key}' already exists! Please use 'Change existing macro' option to modify it.")
+            return
+            
         self.macros[key] = playlist_id
 
     def change_macro(self):
