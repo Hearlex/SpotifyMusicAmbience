@@ -2,6 +2,8 @@ import random
 import keyboard
 import time
 import threading
+import spotipy
+import win32gui
 
 class MusicPlayer:
     def __init__(self, spotify_client, macro_manager):
@@ -11,6 +13,14 @@ class MusicPlayer:
         self.playback_thread = None
         self.stop_event = threading.Event()
         self.is_paused = False
+        # Get our console window handle
+        self.console_hwnd = win32gui.GetForegroundWindow()
+
+    def is_window_focused(self):
+        # Get the foreground window
+        fore_hwnd = win32gui.GetForegroundWindow()
+        # Check if our console window is the foreground window
+        return fore_hwnd == self.console_hwnd
 
     def play_macros(self):
         print("Press 'esc' to return to the main menu.")
@@ -22,15 +32,16 @@ class MusicPlayer:
                     if self.playback_thread and self.playback_thread.is_alive():
                         self.playback_thread.join()
                     break
-                elif event.name == 'space':
-                    self.toggle_playback()
-                elif event.name in self.macro_manager.macros:
-                    self.stop_event.set()
-                    if self.playback_thread and self.playback_thread.is_alive():
-                        self.playback_thread.join()
-                    self.stop_event.clear()
-                    self.playback_thread = threading.Thread(target=self.play_macro, args=(event.name,))
-                    self.playback_thread.start()
+                elif self.is_window_focused():  # Only process other keys if window is focused
+                    if event.name == 'space':
+                        self.toggle_playback()
+                    elif event.name in self.macro_manager.macros:
+                        self.stop_event.set()
+                        if self.playback_thread and self.playback_thread.is_alive():
+                            self.playback_thread.join()
+                        self.stop_event.clear()
+                        self.playback_thread = threading.Thread(target=self.play_macro, args=(event.name,))
+                        self.playback_thread.start()
 
     def play_macro(self, key):
         playlist_id = self.macro_manager.macros[key]
